@@ -57,8 +57,8 @@ public class Main {
         List<Data> years = converter.getList(json, Data.class);
         List<Vehicle> vehicles = new ArrayList<>();
 
-        for (int i = 0; i < years.size(); i++) {
-            String addressYear = address + "/" + years.get(i).code();
+        for (Data year : years) {
+            String addressYear = address + "/" + year.code();
             json = consume.obtainInfo(addressYear);
             Vehicle vehicle = converter.getData(json, Vehicle.class);
             vehicles.add(vehicle);
