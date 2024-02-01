@@ -1,5 +1,5 @@
 # Desafio Java: trabalhando com lambdas, streams e Spring Framework
-## Pesquise todos os valores anuais de um veículo
+## Pesquise todos os valores anuais de um veículo em uma única pesquisa
 Esse projeto é um exercício que foi feito junto com "Java: trabalhando com lambdas, streams e Spring Framework" da Alura.
 Nele exercitamos o Spring framework, funções lambda, stream, manipulação de API, e entre outros para criar um aplicativo que pesquise todos os valores anuais de um carro, moto, ou caminhão.
 
