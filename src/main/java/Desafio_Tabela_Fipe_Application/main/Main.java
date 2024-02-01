@@ -4,10 +4,7 @@ import Desafio_Tabela_Fipe_Application.model.*;
 import Desafio_Tabela_Fipe_Application.service.ConsumeApi;
 import Desafio_Tabela_Fipe_Application.service.ConvertData;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -35,37 +32,44 @@ public class Main {
                         .forEach(System.out::println);
 
         System.out.println("\nPlease choose a brand by code.");
-        int modelCode = input.nextInt();
-        input.nextLine();
-        address = address + "/" + modelCode + "/modelos";
-        json = consume.obtainInfo(address);
-        Models modelsList = converter.getData(json, Models.class);
-        System.out.println(modelsList);
+        try {
+            int modelCode = input.nextInt();
+            input.nextLine();
+            address = address + "/" + modelCode + "/modelos";
+            json = consume.obtainInfo(address);
+            Models modelsList = converter.getData(json, Models.class);
+            System.out.println(modelsList);
+            System.out.println("Please enter an excerpt of the model");
+            String model = input.nextLine();
+            List<Data> filteredModels = modelsList.models().stream()
+                    .filter(m -> m.name().contains(model))
+                    .sorted(Comparator.comparing(Data::name))
+                    .collect(Collectors.toList());
+            System.out.println(filteredModels);
 
-        System.out.println("Please enter the name of the model");
-        String model = input.nextLine();
-        List<Data> filteredModels = modelsList.models().stream()
-                .filter(m -> m.name().contains(model))
-                        .collect(Collectors.toList());
-        System.out.println(filteredModels);
+            System.out.println("\nPlease choose the model's code");
+            modelCode = input.nextInt();
+            input.nextLine();
+            address = address + "/" + modelCode + "/anos";
+            json = consume.obtainInfo(address);
+            List<Data> years = converter.getList(json, Data.class);
+            List<Vehicle> vehicles = new ArrayList<>();
 
-        System.out.println("\nPlease choose the model's code");
-        modelCode = input.nextInt();
-        input.nextLine();
-        address = address + "/" + modelCode + "/anos";
-        json = consume.obtainInfo(address);
-        List<Data> years = converter.getList(json, Data.class);
-        List<Vehicle> vehicles = new ArrayList<>();
+            for (Data year : years) {
+                String addressYear = address + "/" + year.code();
+                json = consume.obtainInfo(addressYear);
+                Vehicle vehicle = converter.getData(json, Vehicle.class);
+                vehicles.add(vehicle);
+            }
 
-        for (Data year : years) {
-            String addressYear = address + "/" + year.code();
-            json = consume.obtainInfo(addressYear);
-            Vehicle vehicle = converter.getData(json, Vehicle.class);
-            vehicles.add(vehicle);
+            System.out.println("\nAll filtered vehicles\n");
+            vehicles.forEach(System.out::println);
+        } catch (InputMismatchException e) {
+            System.out.println("Error! Please insert a number!");
         }
 
-        System.out.println("All vehicles filtered");
-        vehicles.forEach(System.out::println);
+
+
 
 
     }
